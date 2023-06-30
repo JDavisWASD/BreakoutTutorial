@@ -1,20 +1,24 @@
 const canvas = document.getElementById("gameBoard");
 const context = canvas.getContext("2d");
 
-context.beginPath();
-context.rect(20, 40, 50, 50);
-context.fillStyle = "#FF0000";
-context.fill();
-context.closePath();
+let dx = 2;
+let dy = -2;
+let x = canvas.width / 2;
+let y = canvas.height - 30;
 
-context.beginPath();
-context.arc(240, 160, 20, 0, Math.PI * 2, false);
-context.fillStyle = "green";
-context.fill();
-context.closePath();
+function draw() {
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    drawBall();
+    x += dx;
+    y += dy;
+}
 
-context.beginPath();
-context.rect(160, 10, 100, 40);
-context.strokeStyle = "rgba(0, 0, 255, 0.5)";
-context.stroke();
-context.closePath();
+function drawBall() {
+    context.beginPath();
+    context.arc(x, y, 10, 0, Math.PI *2);
+    context.fillStyle = "#0095DD";
+    context.fill();
+    context.closePath();
+}
+
+setInterval(draw, 10);
