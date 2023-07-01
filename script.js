@@ -1,6 +1,7 @@
 const ballRadius = 10;
 const canvas = document.getElementById("gameBoard");
 const context = canvas.getContext("2d");
+const interval = setInterval(draw, 10);
 const paddleHeight = 10;
 const paddleWidth = 75;
 const paddleSpeed = 7;
@@ -25,9 +26,18 @@ function draw() {
         ballRadius) {
             horizBallSpeed = -horizBallSpeed;
     }
-    if (y + vertBallSpeed > canvas.height - ballRadius || y + vertBallSpeed <
-        ballRadius) {
+    if (y + vertBallSpeed < ballRadius) {
+        vertBallSpeed = -vertBallSpeed;
+    }
+    else if (y + vertBallSpeed > canvas.height - ballRadius) {
+        if (x > paddleX && x < paddleX + paddleWidth) {
             vertBallSpeed = -vertBallSpeed;
+        }
+        else {
+            alert("GAME OVER");
+            document.location.reload();
+            clearInterval(interval);    //Required for Chrome
+        }
     }
 
     if (rightPressed) {
@@ -78,4 +88,3 @@ function keyUpHandler(event) {
 
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
-setInterval(draw, 10);
