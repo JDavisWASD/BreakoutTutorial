@@ -32,8 +32,29 @@ for (let col = 0; col < brickColumnCount; col++) {
     for (let row = 0; row < brickRowCount; row++) {
         bricks[col][row] = {
             x: 0,
-            y: 0
+            y: 0,
+            status: 1
         };
+    }
+}
+
+function collisonDetection() {
+    for (let col = 0; col < brickColumnCount; col++) {
+        for (let row = 0; row < brickRowCount; row++) {
+            const brick = bricks[col][row];
+
+            if (brick.status === 1) {
+                if (
+                    x > brick.x &&
+                    x < brick.x + brickWidth &&
+                    y > brick.y &&
+                    y < brick.y + brickHeight
+                ) {
+                    vertBallSpeed = -vertBallSpeed;
+                    brick.status = 0;
+                }
+            }
+        }
     }
 }
 
@@ -42,6 +63,7 @@ function draw() {
     drawBall();
     drawPaddle();
     drawBricks();
+    collisonDetection()
 
     if (x + horizBallSpeed > canvas.width - ballRadius || x + horizBallSpeed <
         ballRadius) {
@@ -83,16 +105,20 @@ function drawBall() {
 function drawBricks() {
     for (let col = 0; col < brickColumnCount; col++) {
         for (let row = 0; row < brickRowCount; row++) {
-            const brickX = col * (brickWidth + brickPadding) + brickOffsetLeft;
-            const brickY = row * (brickHeight + brickPadding) + brickOffsetTop;
-
-            bricks[col][row].x = brickX;
-            bricks[col][row].y = brickY;
-            context.beginPath();
-            context.rect(brickX, brickY, brickWidth, brickHeight);
-            context.fillStyle = "#0095DD";
-            context.fill();
-            context.closePath();
+            if (bricks[col][row].status === 1) {
+                const brickX = col * (brickWidth + brickPadding) +
+                    brickOffsetLeft;
+                const brickY = row * (brickHeight + brickPadding) +
+                    brickOffsetTop;
+    
+                bricks[col][row].x = brickX;
+                bricks[col][row].y = brickY;
+                context.beginPath();
+                context.rect(brickX, brickY, brickWidth, brickHeight);
+                context.fillStyle = "#0095DD";
+                context.fill();
+                context.closePath();
+            }
         }
     }
 }
