@@ -20,6 +20,7 @@ let leftPressed = false;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightKeybind = "d";
 let rightPressed = false;
+let score = 0;
 let vertBallSpeed = -2;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
@@ -52,6 +53,13 @@ function collisonDetection() {
                 ) {
                     vertBallSpeed = -vertBallSpeed;
                     brick.status = 0;
+                    score++;
+
+                    if (score === brickRowCount * brickColumnCount) {
+                        alert("YOU WIN");
+                        document.location.reload();
+                        clearInterval(interval);    //Required for Chrome
+                    }
                 }
             }
         }
@@ -63,7 +71,8 @@ function draw() {
     drawBall();
     drawPaddle();
     drawBricks();
-    collisonDetection()
+    drawScore();
+    collisonDetection();
 
     if (x + horizBallSpeed > canvas.width - ballRadius || x + horizBallSpeed <
         ballRadius) {
@@ -130,6 +139,12 @@ function drawPaddle() {
     context.fillStyle = "#0095DD";
     context.fill();
     context.closePath();
+}
+
+function drawScore() {
+    context.font = "16px Arial";
+    context.fillStyle = "#0095DD";
+    context.fillText(`Score: ${score}`, 8, 20);
 }
 
 function keyDownHandler(event) {
