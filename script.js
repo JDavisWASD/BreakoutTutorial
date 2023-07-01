@@ -25,6 +25,7 @@ let vertBallSpeed = -2;
 let x = canvas.width / 2;
 let y = canvas.height - 30;
 
+document.addEventListener("mousemove", mouseMoveHandler, false);
 document.addEventListener("keydown", keyDownHandler, false);
 document.addEventListener("keyup", keyUpHandler, false);
 
@@ -145,6 +146,13 @@ function drawScore() {
     context.font = "16px Arial";
     context.fillStyle = "#0095DD";
     context.fillText(`Score: ${score}`, 8, 20);
+}
+
+function mouseMoveHandler(event) {
+    const relativeX = event.clientX - canvas.offsetLeft;
+    if (relativeX > 0 && relativeX < canvas.width) {
+        paddleX = relativeX -paddleWidth / 2;
+    }
 }
 
 function keyDownHandler(event) {
