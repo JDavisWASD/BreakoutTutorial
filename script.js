@@ -9,7 +9,6 @@ const brickWidth = 75;
 const bricks = [];
 const canvas = document.getElementById("gameBoard");
 const context = canvas.getContext("2d");
-const interval = setInterval(draw, 10);
 const paddleHeight = 10;
 const paddleWidth = 75;
 const paddleSpeed = 7;
@@ -17,6 +16,7 @@ const paddleSpeed = 7;
 let horizBallSpeed = 2;
 let leftKeybind = "a";
 let leftPressed = false;
+let lives = 3;
 let paddleX = (canvas.width - paddleWidth) / 2;
 let rightKeybind = "d";
 let rightPressed = false;
@@ -40,6 +40,8 @@ for (let col = 0; col < brickColumnCount; col++) {
     }
 }
 
+draw();
+
 function collisonDetection() {
     for (let col = 0; col < brickColumnCount; col++) {
         for (let row = 0; row < brickRowCount; row++) {
@@ -59,7 +61,6 @@ function collisonDetection() {
                     if (score === brickRowCount * brickColumnCount) {
                         alert("YOU WIN");
                         document.location.reload();
-                        clearInterval(interval);    //Required for Chrome
                     }
                 }
             }
@@ -73,6 +74,7 @@ function draw() {
     drawPaddle();
     drawBricks();
     drawScore();
+    drawLives();
     collisonDetection();
 
     if (x + horizBallSpeed > canvas.width - ballRadius || x + horizBallSpeed <
@@ -87,9 +89,18 @@ function draw() {
             vertBallSpeed = -vertBallSpeed;
         }
         else {
-            alert("GAME OVER");
-            document.location.reload();
-            clearInterval(interval);    //Required for Chrome
+            lives--;
+            if (!lives) {
+                alert("GAME OVER");
+                document.location.reload();
+            }
+            else {
+                x = canvas.width / 2;
+                y = canvas.height - 30;
+                horizBallSpeed = 2;
+                vertBallSpeed = -2;
+                paddleX = (canvas.width - paddleWidth) / 2;
+            }
         }
     }
 
@@ -102,6 +113,8 @@ function draw() {
 
     x += horizBallSpeed;
     y += vertBallSpeed;
+
+    requestAnimationFrame(draw);
 }
 
 function drawBall() {
@@ -131,6 +144,12 @@ function drawBricks() {
             }
         }
     }
+}
+
+function drawLives() {
+    context.font = "16px Arial";
+    context.fillStyle = "#0095DD";
+    context.fillText(`Lives: ${lives}`, canvas.width - 65, 20);
 }
 
 function drawPaddle() {
